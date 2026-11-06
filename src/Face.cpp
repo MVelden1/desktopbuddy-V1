@@ -16,6 +16,8 @@ enum class BlinkState
 static Arduino_Canvas* face = nullptr;
 static Mood currentMood = Mood::Neutral;
 static EyeShape currentShape = NEUTRAL_EYES;
+static bool LEFT_EYE = true;
+static bool RIGHT_EYE = false;
 
 // --- blinking ---
 static BlinkState blinkState = BlinkState::Open;
@@ -38,8 +40,8 @@ static unsigned long lastLookStep = 0;
 static void drawEyes()
 {
     face->fillScreen(RGB565_BLACK);
-    eyesDraw(face, 40 + lookX, 30 + lookY, currentShape, lid);
-    eyesDraw(face, 144 + lookX, 30 + lookY, currentShape, lid);
+    eyesDraw(face, 64 + lookX, 70 + lookY, currentShape, lid, LEFT_EYE);
+    eyesDraw(face, 168 + lookX, 70 + lookY, currentShape, lid, RIGHT_EYE);
     face->flush();
 }
 
@@ -140,6 +142,18 @@ void faceSetMood(Mood mood)
         break;
     case Mood::Happy:
         currentShape = HAPPY_EYES;
+        break;
+    case Mood::Sleepy:
+        currentShape = SLEEPY_EYES;
+        break;
+    case Mood::Surprised:
+        currentShape = SURPRISED_EYES;
+        break;
+    case Mood::Suspicious:
+        currentShape = SUSPICIOUS_EYES;
+        break;
+    case Mood::Annoyed:
+        currentShape = ANNOYED_EYES;
         break;
     }
 

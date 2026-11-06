@@ -29,6 +29,8 @@ void setup()
     faceBegin(gfx);
 
     sensorsBegin();
+
+    // faceSetMood(Mood::Surprised);
 }
 
 void loop()

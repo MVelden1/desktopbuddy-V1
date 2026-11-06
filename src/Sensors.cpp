@@ -7,10 +7,15 @@
 
 static const int PET_PIN = 18;
 static bool wasPetted = false;
+// todo weghalen for testing
+static const int MOOD_PIN = 17;
+static bool moodWasSwitched = false;
 
 void sensorsBegin()
 {
     pinMode(PET_PIN, INPUT_PULLUP);
+    // todo weghalen for testing
+    pinMode(MOOD_PIN, INPUT_PULLUP);
 }
 
 bool sensorWasPetted()
@@ -20,4 +25,14 @@ bool sensorWasPetted()
     wasPetted = pettedNow;
 
     return petted;
+}
+
+// todo weghalen for testing
+bool sensorMoodButtonPressed()
+{
+    bool buttonPressedNow = digitalRead(MOOD_PIN) == LOW;
+    bool moodSwitched = buttonPressedNow && !moodWasSwitched;
+    moodWasSwitched = buttonPressedNow;
+
+    return moodSwitched;
 }

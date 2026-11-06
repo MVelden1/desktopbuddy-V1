@@ -6,8 +6,11 @@
 
 static const uint16_t EYE_COLOR = RGB565_CYAN;
 
-void eyesDraw(Arduino_GFX* canvas, int x, int y, EyeShape shape, int lid)
+void eyesDraw(Arduino_GFX* canvas, int centerX, int centerY, EyeShape shape, int lid, bool isLeft)
 {
+    int x = centerX - shape.width / 2;
+    int y = centerY - shape.height / 2;
+
     int blinkHeight = shape.height - (shape.height - 5) * lid / 100;
     int blinkTop = y + (shape.height - blinkHeight) * 73 / 100;
 
@@ -16,7 +19,20 @@ void eyesDraw(Arduino_GFX* canvas, int x, int y, EyeShape shape, int lid)
     if (shape.lidBottom > 0)
     {
         canvas->fillRoundRect(x, y + shape.height - shape.lidBottom, shape.width,
-            shape.height, shape.radius, RGB565_BLACK);
+                              shape.height, shape.radius, RGB565_BLACK);
+    }
+
+    if (shape.lidTilt != 0)
+    {
+        int top = y + shape.lidTop;
+        int innerDrop = max(0, shape.lidTilt);
+        int outerDrop = max(0, -shape.lidTilt);
+
+        int leftDrop = isLeft ? outerDrop : innerDrop;
+        int rightDrop = isLeft ? innerDrop : outerDrop;
+
+        canvas->fillTriangle(x, top, x + shape.width, top, x + shape.width, top + rightDrop, RGB565_BLACK);
+        canvas->fillTriangle(x, top, x + shape.width, top + rightDrop, x, top + leftDrop, RGB565_BLACK);
     }
 
     if (shape.lidTop > 0)

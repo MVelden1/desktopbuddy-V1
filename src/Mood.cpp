@@ -20,4 +20,11 @@ void moodUpdate(unsigned long now)
     {
         faceSetMood(Mood::Neutral);
     }
+
+    // todo weghalen for testing
+    if (sensorMoodButtonPressed())
+    {
+        int next = ((int)faceGetMood() + 1) % 6;
+        faceSetMood((Mood)next);
+    }
 }

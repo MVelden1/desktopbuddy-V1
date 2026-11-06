@@ -5,4 +5,5 @@
 #pragma once
 
 void sensorsBegin();
-bool sensorWasPetted(); // misschien sensorWasTouched?
+bool sensorWasPetted();
+bool sensorMoodButtonPressed();

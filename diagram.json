@@ -34,6 +34,18 @@
         "key": "p",
         "bounce": "0"
       }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btnMood",
+      "top": 300,
+      "left": -140,
+      "attrs": {
+        "color": "blue",
+        "label": "mood (M)",
+        "key": "m",
+        "bounce": "0"
+      }
     }
   ],
   "connections": [
@@ -106,6 +118,18 @@
     [
       "btnPet:2.r",
       "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "btnMood:1.r",
+      "esp:17",
+      "blue",
+      []
+    ],
+    [
+      "btnMood:2.r",
+      "esp:GND.2",
       "black",
       []
     ]

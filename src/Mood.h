@@ -7,7 +7,11 @@
 enum class Mood
 {
     Neutral,
-    Happy
+    Happy,
+    Sleepy,
+    Surprised,
+    Suspicious,
+    Annoyed
 };
 
 void moodUpdate(unsigned long now);

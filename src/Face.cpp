@@ -3,6 +3,7 @@
 //
 
 #include "Face.h"
+#include "Eyes.h"
 
 enum class BlinkState
 {
@@ -14,6 +15,7 @@ enum class BlinkState
 // --- drawing ---
 static Arduino_Canvas* face = nullptr;
 static Mood currentMood = Mood::Neutral;
+static EyeShape currentShape = NEUTRAL_EYES;
 
 // --- blinking ---
 static BlinkState blinkState = BlinkState::Open;
@@ -36,21 +38,8 @@ static unsigned long lastLookStep = 0;
 static void drawEyes()
 {
     face->fillScreen(RGB565_BLACK);
-    if (currentMood == Mood::Neutral)
-    {
-        int eyeTop = 30 + 55 * lid / 100;
-        int eyeHeight = 80 - 75 * lid / 100;
-
-        face->fillRoundRect(40 + lookX, eyeTop + lookY, 48, eyeHeight, 16, RGB565_WHITE);
-        face->fillRoundRect(144 + lookX, eyeTop + lookY, 48, eyeHeight, 16, RGB565_WHITE);
-    }
-    if (currentMood == Mood::Happy)
-    {
-        face->fillRoundRect(40 + lookX, 30 + lookY, 48, 80, 16, RGB565_WHITE);
-        face->fillRoundRect(40 + lookX, 60 + lookY, 48, 80, 16, RGB565_BLACK);
-        face->fillRoundRect(144 + lookX, 30 + lookY, 48, 80, 16, RGB565_WHITE);
-        face->fillRoundRect(144 + lookX, 60 + lookY, 48, 80, 16, RGB565_BLACK);
-    }
+    eyesDraw(face, 40 + lookX, 30 + lookY, currentShape, lid);
+    eyesDraw(face, 144 + lookX, 30 + lookY, currentShape, lid);
     face->flush();
 }
 
@@ -144,6 +133,16 @@ void faceSetMood(Mood mood)
     }
 
     currentMood = mood;
+    switch (mood)
+    {
+    case Mood::Neutral:
+        currentShape = NEUTRAL_EYES;
+        break;
+    case Mood::Happy:
+        currentShape = HAPPY_EYES;
+        break;
+    }
+
     drawEyes();
 }
 

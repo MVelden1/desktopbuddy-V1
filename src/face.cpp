@@ -4,9 +4,20 @@
 
 #include "face.h"
 
+enum class BlinkState
+{
+    Open,
+    Closing,
+    Opening
+};
+
+static BlinkState blinkState = BlinkState::Open;
+static unsigned long blinkInterval = 4000;
+
 static Arduino_Canvas* face = nullptr;
 static unsigned long lastBlink = 0;
-static bool eyesOpen = true;
+static unsigned long lastBlinkStep = 0;
+static int lid = 0;
 static Mood currentMood = Mood::Neutral;
 
 static const int MAX_LOOK_X = 40;
@@ -21,21 +32,16 @@ static unsigned long lastLook = 0;
 static unsigned long lookDuration = 2000;
 static unsigned long lastStep = 0;
 
-static void drawEyes(bool open)
+static void drawEyes()
 {
     face->fillScreen(RGB565_BLACK);
     if (currentMood == Mood::Neutral)
     {
-        if (open)
-        {
-            face->fillRoundRect(40 + lookX, 30 + lookY, 48, 80, 16, RGB565_WHITE);
-            face->fillRoundRect(144 + lookX, 30 + lookY, 48, 80, 16, RGB565_WHITE);
-        }
-        else
-        {
-            face->fillRoundRect(40 + lookX, 85 + lookY, 48, 5, 2, RGB565_WHITE);
-            face->fillRoundRect(144 + lookX, 85 + lookY, 48, 5, 2, RGB565_WHITE);
-        }
+        int eyeTop = 30 + 55 * lid / 100;
+        int eyeHeight = 80 - 75 * lid / 100;
+
+        face->fillRoundRect(40 + lookX, eyeTop + lookY, 48, eyeHeight, 16, RGB565_WHITE);
+        face->fillRoundRect(144 + lookX, eyeTop + lookY, 48, eyeHeight, 16, RGB565_WHITE);
     }
     if (currentMood == Mood::Happy)
     {
@@ -52,22 +58,47 @@ void faceBegin(Arduino_GFX* gfx)
     face = new Arduino_Canvas(232, 140, gfx, 44, 40);
     face->begin(GFX_SKIP_OUTPUT_BEGIN);
 
-    drawEyes(true);
+    drawEyes();
 }
 
 void faceUpdate(unsigned long now)
 {
-    if (eyesOpen && now - lastBlink > 3000)
+    switch (blinkState)
     {
-        eyesOpen = false;
-        drawEyes(false);
-        lastBlink = now;
-    }
-    else if (!eyesOpen && now - lastBlink > 150)
-    {
-        eyesOpen = true;
-        drawEyes(true);
-        lastBlink = now;
+    case BlinkState::Open:
+        if (now - lastBlink > blinkInterval)
+            blinkState = BlinkState::Closing;
+        break;
+
+    case BlinkState::Closing:
+        if (now - lastBlinkStep > 30)
+        {
+            lid += 25;
+            drawEyes();
+            if (lid >= 100)
+            {
+                lid = 100;
+                blinkState = BlinkState::Opening;
+            }
+            lastBlinkStep = now;
+        }
+        break;
+
+    case BlinkState::Opening:
+        if (now - lastBlinkStep > 30)
+        {
+            lid -= 20;
+            drawEyes();
+            if (lid <= 0)
+            {
+                lid = 0;
+                lastBlink = now;
+                blinkInterval = random(3000, 7000);
+                blinkState = BlinkState::Open;
+            }
+            lastBlinkStep = now;
+        }
+        break;
     }
 
     if (now - lastLook > lookDuration)
@@ -90,7 +121,7 @@ void faceUpdate(unsigned long now)
     {
         lookX += constrain(targetX-lookX, -4, 4);
         lookY += constrain(targetY-lookY, -4, 4);
-        drawEyes(eyesOpen);
+        drawEyes();
         lastStep = now;
     }
 }
@@ -98,5 +129,5 @@ void faceUpdate(unsigned long now)
 void faceSetMood(Mood mood)
 {
     currentMood = mood;
-    drawEyes(true);
+    drawEyes();
 }

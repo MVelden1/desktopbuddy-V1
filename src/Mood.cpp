@@ -24,7 +24,7 @@ void moodUpdate(unsigned long now)
     // todo weghalen for testing
     if (sensorMoodButtonPressed())
     {
-        int next = ((int)faceGetMood() + 1) % 6;
+        int next = ((int)faceGetMood() + 1) % int(Mood::Count);
         faceSetMood((Mood)next);
     }
 }

@@ -11,7 +11,8 @@ enum class Mood
     Sleepy,
     Surprised,
     Suspicious,
-    Annoyed
+    Annoyed,
+    Count
 };
 
 void moodUpdate(unsigned long now);

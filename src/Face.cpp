@@ -15,9 +15,28 @@ enum class BlinkState
 // --- drawing ---
 static Arduino_Canvas* face = nullptr;
 static Mood currentMood = Mood::Neutral;
-static EyeShape currentShape = NEUTRAL_EYES;
-static bool LEFT_EYE = true;
-static bool RIGHT_EYE = false;
+static EyeShape currentShape;
+static const bool LEFT_EYE = true;
+static const bool RIGHT_EYE = false;
+static EyeStyle eyeStyle = EyeStyle::Round;
+
+static const EyeShape ROUNDED_SHAPES[] = {
+    {64, 72, 14, 0, 0, 0, false}, // Neutral
+    {64, 72, 14, 0, 0, 50, false}, // Happy
+    {64, 72, 14, 48, 0, 10, false}, // Sleepy
+    {70, 86, 22, 0, 0, 0, false}, // Surprised
+    {64, 72, 14, 26, 0, 26, false}, // Suspicious
+    {64, 72, 14, 20, 22, 0, false}, // Annoyed
+};
+
+static const EyeShape ROUND_SHAPES[] = {
+    {62, 62, 31, 0, 0, 0, false}, // Neutral
+    {62, 62, 31, 0, 0, 44, true}, // Happy
+    {62, 62, 31, 30, 0, 4, false}, // Sleepy
+    {72, 72, 36, 0, 0, 0, false}, // Surprised:
+    {62, 62, 31, 22, 0, 24, false}, // Suspicious
+    {62, 62, 31, 16, 18, 14, false}, // Annoyed
+    };
 
 // --- blinking ---
 static BlinkState blinkState = BlinkState::Open;
@@ -40,9 +59,15 @@ static unsigned long lastLookStep = 0;
 static void drawEyes()
 {
     face->fillScreen(RGB565_BLACK);
-    eyesDraw(face, 64 + lookX, 70 + lookY, currentShape, lid, LEFT_EYE);
-    eyesDraw(face, 168 + lookX, 70 + lookY, currentShape, lid, RIGHT_EYE);
+    eyesDraw(face, 78 + lookX, 70 + lookY, currentShape, lid, LEFT_EYE);
+    eyesDraw(face, 154 + lookX, 70 + lookY, currentShape, lid, RIGHT_EYE);
     face->flush();
+}
+
+static void updateShape()
+{
+    const EyeShape* shapes = (eyeStyle == EyeStyle::Round) ? ROUND_SHAPES:ROUNDED_SHAPES;
+    currentShape = shapes[(int)currentMood];
 }
 
 void faceBegin(Arduino_GFX* gfx)
@@ -50,6 +75,7 @@ void faceBegin(Arduino_GFX* gfx)
     face = new Arduino_Canvas(232, 140, gfx, 44, 40);
     face->begin(GFX_SKIP_OUTPUT_BEGIN);
 
+    updateShape();
     drawEyes();
 }
 
@@ -135,28 +161,8 @@ void faceSetMood(Mood mood)
     }
 
     currentMood = mood;
-    switch (mood)
-    {
-    case Mood::Neutral:
-        currentShape = NEUTRAL_EYES;
-        break;
-    case Mood::Happy:
-        currentShape = HAPPY_EYES;
-        break;
-    case Mood::Sleepy:
-        currentShape = SLEEPY_EYES;
-        break;
-    case Mood::Surprised:
-        currentShape = SURPRISED_EYES;
-        break;
-    case Mood::Suspicious:
-        currentShape = SUSPICIOUS_EYES;
-        break;
-    case Mood::Annoyed:
-        currentShape = ANNOYED_EYES;
-        break;
-    }
 
+    updateShape();
     drawEyes();
 }
 

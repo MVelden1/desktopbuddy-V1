@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "author": "Mick",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-s3-devkitc-1",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {
+        "flashSize": "8"
+      }
+    },
+    {
+      "type": "wokwi-ili9341",
+      "id": "lcd",
+      "top": -10,
+      "left": 330,
+      "rotate": 90,
+      "attrs": {
+        "flipHorizontal": "1",
+        "flipVertical": "1"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "esp:TX",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "esp:RX",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "lcd:VCC",
+      "esp:3V3.1",
+      "red",
+      []
+    ],
+    [
+      "lcd:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "lcd:CS",
+      "esp:42",
+      "orange",
+      []
+    ],
+    [
+      "lcd:D/C",
+      "esp:41",
+      "purple",
+      []
+    ],
+    [
+      "lcd:MOSI",
+      "esp:45",
+      "blue",
+      []
+    ],
+    [
+      "lcd:SCK",
+      "esp:40",
+      "green",
+      []
+    ],
+    [
+      "lcd:RST",
+      "esp:39",
+      "gray",
+      []
+    ],
+    [
+      "lcd:LED",
+      "esp:3V3.2",
+      "red",
+      []
+    ]
+  ]
+}

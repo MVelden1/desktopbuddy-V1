@@ -4,6 +4,7 @@
 
 #include <Arduino.h>
 #include <Arduino_GFX_Library.h>
+#include "face.h"
 
 Arduino_DataBus* bus = new Arduino_HWSPI(41, 42, 40, 45, 46);
 #ifdef WOKWI
@@ -23,10 +24,11 @@ void setup()
     gfx->begin();
     gfx->fillScreen(RGB565_BLACK);
 
-    gfx->fillRoundRect(84, 70, 48, 80, 16, RGB565_WHITE);
-    gfx->fillRoundRect(188, 70, 48, 80, 16, RGB565_WHITE);
+    faceBegin(gfx);
 }
 
 void loop()
 {
+    unsigned long now = millis();
+    faceUpdate(now);
 }

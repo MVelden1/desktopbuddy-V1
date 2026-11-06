@@ -8,7 +8,7 @@
 
 Arduino_DataBus* bus = new Arduino_HWSPI(41, 42, 40, 45, 46);
 #ifdef WOKWI
-Arduino_GFX* gfx = new Arduino_ILI9341(bus, 39, 1);
+Arduino_GFX* gfx = new Arduino_ILI9341(bus, 39, 3);
 #else
 Arduino_GFX* gfx = new Arduino_ST7789(bus, 39, 1, true);
 #endif
@@ -25,6 +25,7 @@ void setup()
     gfx->fillScreen(RGB565_BLACK);
 
     faceBegin(gfx);
+    // faceSetMood(Mood::Neutral);
 }
 
 void loop()

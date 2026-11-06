@@ -7,20 +7,31 @@
 static Arduino_Canvas* face = nullptr;
 static unsigned long lastBlink = 0;
 static bool eyesOpen = true;
+static Mood currentMood = Mood::Neutral;
 
 static void drawEyes(bool open)
 {
     face->fillScreen(RGB565_BLACK);
-
-    if (open)
+    if (currentMood == Mood::Neutral)
     {
-        face->fillRoundRect(0, 0, 48, 80, 16, RGB565_WHITE);
-        face->fillRoundRect(104, 0, 48, 80, 16, RGB565_WHITE);
+        if (open)
+        {
+            face->fillRoundRect(0, 0, 48, 80, 16, RGB565_WHITE);
+            face->fillRoundRect(104, 0, 48, 80, 16, RGB565_WHITE);
+        }
+        else
+        {
+            face->fillRoundRect(0, 0, 48, 5, 2, RGB565_WHITE);
+            face->fillRoundRect(104, 0, 48, 5, 2, RGB565_WHITE);
+        }
     }
-    else
+    if (currentMood == Mood::Happy)
     {
-        face->fillRoundRect(0, 0, 48, 5, 2, RGB565_WHITE);
-        face->fillRoundRect(104, 0, 48, 5, 2, RGB565_WHITE);
+        face->fillRoundRect(0,0,48,80,16, RGB565_WHITE);
+        face->fillRoundRect(0,30,48,80,16, RGB565_BLACK);
+        face->fillRoundRect(104,0,48,80,16, RGB565_WHITE);
+        face->fillRoundRect(104,30,48,80,16, RGB565_BLACK);
+
     }
     face->flush();
 }
@@ -40,10 +51,17 @@ void faceUpdate(unsigned long now)
         eyesOpen = false;
         drawEyes(false);
         lastBlink = now;
-    } else if (!eyesOpen && now - lastBlink > 150)
+    }
+    else if (!eyesOpen && now - lastBlink > 150)
     {
         eyesOpen = true;
         drawEyes(true);
         lastBlink = now;
     }
+}
+
+void faceSetMood(Mood mood)
+{
+    currentMood = mood;
+    drawEyes(true);
 }

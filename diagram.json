@@ -22,6 +22,18 @@
         "flipHorizontal": "1",
         "flipVertical": "1"
       }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btnPet",
+      "top": 230,
+      "left": -140,
+      "attrs": {
+        "color": "green",
+        "label": "aaien (P)",
+        "key": "p",
+        "bounce": "0"
+      }
     }
   ],
   "connections": [
@@ -83,6 +95,18 @@
       "lcd:LED",
       "esp:3V3.2",
       "red",
+      []
+    ],
+    [
+      "btnPet:1.r",
+      "esp:18",
+      "green",
+      []
+    ],
+    [
+      "btnPet:2.r",
+      "esp:GND.1",
+      "black",
       []
     ]
   ]

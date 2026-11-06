@@ -2,7 +2,7 @@
 // Created by Mick on 6-11-2026.
 //
 
-#include "face.h"
+#include "Face.h"
 
 enum class BlinkState
 {
@@ -138,6 +138,16 @@ void faceUpdate(unsigned long now)
 
 void faceSetMood(Mood mood)
 {
+    if (mood == currentMood)
+    {
+        return;
+    }
+
     currentMood = mood;
     drawEyes();
+}
+
+Mood faceGetMood()
+{
+    return currentMood;
 }

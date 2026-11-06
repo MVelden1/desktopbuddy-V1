@@ -4,7 +4,9 @@
 
 #include <Arduino.h>
 #include <Arduino_GFX_Library.h>
-#include "face.h"
+#include "Face.h"
+#include "Sensors.h"
+#include "Mood.h"
 
 Arduino_DataBus* bus = new Arduino_HWSPI(41, 42, 40, 45, 46);
 #ifdef WOKWI
@@ -25,11 +27,13 @@ void setup()
     gfx->fillScreen(RGB565_BLACK);
 
     faceBegin(gfx);
-    // faceSetMood(Mood::Neutral);
+
+    sensorsBegin();
 }
 
 void loop()
 {
     unsigned long now = millis();
     faceUpdate(now);
+    moodUpdate(now);
 }

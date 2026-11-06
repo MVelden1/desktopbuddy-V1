@@ -10,4 +10,5 @@
 void faceBegin(Arduino_GFX* gfx);
 void faceUpdate(unsigned long now);
 void faceSetMood(Mood mood);
+Mood faceGetMood();
 

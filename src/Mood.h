@@ -9,3 +9,5 @@ enum class Mood
     Neutral,
     Happy
 };
+
+void moodUpdate(unsigned long now);

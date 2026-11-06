@@ -11,26 +11,27 @@ enum class BlinkState
     Opening
 };
 
+// --- drawing ---
+static Arduino_Canvas* face = nullptr;
+static Mood currentMood = Mood::Neutral;
+
+// --- blinking ---
 static BlinkState blinkState = BlinkState::Open;
 static unsigned long blinkInterval = 4000;
-
-static Arduino_Canvas* face = nullptr;
 static unsigned long lastBlink = 0;
 static unsigned long lastBlinkStep = 0;
 static int lid = 0;
-static Mood currentMood = Mood::Neutral;
 
+// --- look around ---
 static const int MAX_LOOK_X = 40;
 static const int MAX_LOOK_Y = 30;
-
 static int lookX = 0;
 static int lookY = 0;
 static int targetX = 0;
 static int targetY = 0;
-
 static unsigned long lastLook = 0;
 static unsigned long lookDuration = 2000;
-static unsigned long lastStep = 0;
+static unsigned long lastLookStep = 0;
 
 static void drawEyes()
 {
@@ -61,7 +62,7 @@ void faceBegin(Arduino_GFX* gfx)
     drawEyes();
 }
 
-void faceUpdate(unsigned long now)
+static void updateBlink(unsigned long now)
 {
     switch (blinkState)
     {
@@ -100,7 +101,10 @@ void faceUpdate(unsigned long now)
         }
         break;
     }
+}
 
+static void updateLook(unsigned long now)
+{
     if (now - lastLook > lookDuration)
     {
         if (random(0, 2) == 0)
@@ -117,13 +121,19 @@ void faceUpdate(unsigned long now)
         lastLook = now;
     }
 
-    if (now - lastStep > 30 && (lookX != targetX || lookY != targetY))
+    if (now - lastLookStep > 30 && (lookX != targetX || lookY != targetY))
     {
         lookX += constrain(targetX-lookX, -4, 4);
         lookY += constrain(targetY-lookY, -4, 4);
         drawEyes();
-        lastStep = now;
+        lastLookStep = now;
     }
+}
+
+void faceUpdate(unsigned long now)
+{
+    updateBlink(now);
+    updateLook(now);
 }
 
 void faceSetMood(Mood mood)

@@ -6,11 +6,11 @@
 
 static const uint16_t EYE_COLOR = RGB565_CYAN;
 
-void eyesDraw(Arduino_GFX* canvas, int centerX, int centerY, EyeShape shape, int lid, bool isLeft, int offsetY)
+void eyesDraw(Arduino_GFX* canvas, int centerX, int centerY, EyeShape shape, int lid, bool isLeft)
 {
     int x = centerX - shape.width / 2;
     int y = centerY + shape.offsetY - shape.height / 2;
-    
+
     int visible = shape.height - shape.lidTop - shape.lidBottom - abs(shape.lidTilt) / 2;
 
     int closing = max(0, visible - 5) * lid / 100;

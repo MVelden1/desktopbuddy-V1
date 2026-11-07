@@ -15,6 +15,13 @@ struct EyeShape
     int lidTilt;
     int lidBottom;
     bool curvedBottom;
+    int offsetY;
+};
+
+struct Expression
+{
+    EyeShape left;
+    EyeShape right;
 };
 
 enum class EyeStyle

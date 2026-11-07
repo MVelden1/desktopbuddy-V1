@@ -11,7 +11,9 @@ enum class Mood
     Sleepy,
     Surprised,
     Suspicious,
-    Annoyed,
+    Angry,
+    Focused,
+    Bored,
     Count
 };
 

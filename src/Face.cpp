@@ -15,28 +15,37 @@ enum class BlinkState
 // --- drawing ---
 static Arduino_Canvas* face = nullptr;
 static Mood currentMood = Mood::Neutral;
-static EyeShape currentShape;
+static Expression currentExpression;
 static const bool LEFT_EYE = true;
 static const bool RIGHT_EYE = false;
-static EyeStyle eyeStyle = EyeStyle::Round;
+static EyeStyle eyeStyle = EyeStyle::Rounded;
 
-static const EyeShape ROUNDED_SHAPES[] = {
-    {64, 72, 14, 0, 0, 0, false}, // Neutral
-    {64, 72, 14, 0, 0, 50, false}, // Happy
-    {64, 72, 14, 48, 0, 10, false}, // Sleepy
-    {70, 86, 22, 0, 0, 0, false}, // Surprised
-    {64, 72, 14, 26, 0, 26, false}, // Suspicious
-    {64, 72, 14, 20, 22, 0, false}, // Annoyed
+static Expression both(EyeShape shape)
+{
+    return {shape, shape};
+}
+
+static const Expression ROUNDED_SHAPES[] = {
+    both({64, 68, 16, 0, 0, 0, false, 0}),                                   // Neutral
+    both({64, 68, 16, 0, 0, 42, true, 0}),                                   // Happy
+    {{64, 28, 10, 0, -6, 0, false, 14}, {64, 20, 9, 0, -6, 0, false, 18}},   // Sleepy
+    both({72, 80, 20, 0, 0, 0, false, 0}),                                   // Surprised
+    {{62, 30, 8, 0, 0, 0, false, 0}, {56, 30, 8, 0, 9, 0, false, 1}},        // Suspicious
+    both({64, 68, 16, 24, 22, 0, false, 0}),                                 // Angry
+    both({60, 20, 8, 0, 0, 0, false, 0}),                                    // Focused
+    both({64, 68, 16, 34, 0, 0, false, 0}),                                  // Bored
 };
 
-static const EyeShape ROUND_SHAPES[] = {
-    {62, 62, 31, 0, 0, 0, false}, // Neutral
-    {62, 62, 31, 0, 0, 44, true}, // Happy
-    {62, 62, 31, 30, 0, 4, false}, // Sleepy
-    {72, 72, 36, 0, 0, 0, false}, // Surprised:
-    {62, 62, 31, 22, 0, 24, false}, // Suspicious
-    {62, 62, 31, 16, 18, 14, false}, // Annoyed
-    };
+static const Expression ROUND_SHAPES[] = {
+    both({62, 62, 31, 0, 0, 0, false, 0}),                                   // Neutral
+    both({62, 62, 31, 0, 0, 44, true, 0}),                                   // Happy
+    {{62, 28, 14, 0, -6, 0, false, 14}, {62, 20, 10, 0, -6, 0, false, 18}},  // Sleepy
+    both({72, 72, 36, 0, 0, 0, false, 0}),                                   // Surprised
+    {{62, 30, 13, 0, 0, 0, false, 0}, {56, 30, 13, 0, 9, 0, false, 1}},      // Suspicious
+    both({62, 62, 31, 16, 18, 14, false, 0}),                                // Angry
+    both({60, 20, 10, 0, 0, 0, false, 0}),                                   // Focused
+    both({62, 62, 31, 31, 0, 0, false, 0}),                                  // Bored
+};
 
 // --- blinking ---
 static BlinkState blinkState = BlinkState::Open;
@@ -59,15 +68,15 @@ static unsigned long lastLookStep = 0;
 static void drawEyes()
 {
     face->fillScreen(RGB565_BLACK);
-    eyesDraw(face, 78 + lookX, 70 + lookY, currentShape, lid, LEFT_EYE);
-    eyesDraw(face, 154 + lookX, 70 + lookY, currentShape, lid, RIGHT_EYE);
+    eyesDraw(face, 78 + lookX, 70 + lookY, currentExpression.left, lid, LEFT_EYE);
+    eyesDraw(face, 154 + lookX, 70 + lookY, currentExpression.right, lid, RIGHT_EYE);
     face->flush();
 }
 
 static void updateShape()
 {
-    const EyeShape* shapes = (eyeStyle == EyeStyle::Round) ? ROUND_SHAPES:ROUNDED_SHAPES;
-    currentShape = shapes[(int)currentMood];
+    const Expression* shapes = (eyeStyle == EyeStyle::Round) ? ROUND_SHAPES : ROUNDED_SHAPES;
+    currentExpression = shapes[(int)currentMood];
 }
 
 void faceBegin(Arduino_GFX* gfx)

@@ -4,9 +4,9 @@
 
 #include <Arduino.h>
 #include <Arduino_GFX_Library.h>
-#include "Face.h"
-#include "Sensors.h"
-#include "Mood.h"
+#include "face/Face.h"
+#include "hardware/Sensors.h"
+#include "mood/Mood.h"
 
 Arduino_DataBus* bus = new Arduino_HWSPI(41, 42, 40, 45, 46);
 #ifdef WOKWI

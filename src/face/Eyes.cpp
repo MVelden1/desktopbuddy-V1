@@ -2,7 +2,7 @@
 // Created by Mick on 6-11-2026.
 //
 
-#include "Eyes.h"
+#include "face/Eyes.h"
 
 static const uint16_t EYE_COLOR = RGB565_CYAN;
 

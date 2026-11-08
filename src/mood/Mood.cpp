@@ -3,8 +3,8 @@
 //
 
 #include "Mood.h"
-#include "Face.h"
-#include "Sensors.h"
+#include "../face/Face.h"
+#include "../hardware/Sensors.h"
 
 static unsigned long lastPetted = 0;
 

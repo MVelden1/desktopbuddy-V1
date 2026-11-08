@@ -6,6 +6,9 @@
 #include "config/Board.h"
 #include <Arduino.h>
 
+#if defined(WOKWI)
+
+// Simulator: knoppen "pet (P)" en "mood (M)"
 static bool wasPetted = false;
 static bool moodWasSwitched = false;
 
@@ -33,3 +36,22 @@ bool sensorMoodButtonPressed()
 
     return moodSwitched;
 }
+
+#else
+
+// TODO nog implementeren
+void sensorsBegin()
+{
+}
+
+bool sensorWasPetted()
+{
+    return false;
+}
+
+bool sensorMoodButtonPressed()
+{
+    return false;
+}
+
+#endif

@@ -2,25 +2,22 @@
 // Created by Mick on 6-11-2026.
 //
 
-#include "Sensors.h"
+#include "hardware/Sensors.h"
+#include "config/Board.h"
 #include <Arduino.h>
 
-static const int PET_PIN = 18;
 static bool wasPetted = false;
-// todo weghalen for testing
-static const int MOOD_PIN = 17;
 static bool moodWasSwitched = false;
 
 void sensorsBegin()
 {
-    pinMode(PET_PIN, INPUT_PULLUP);
-    // todo weghalen for testing
-    pinMode(MOOD_PIN, INPUT_PULLUP);
+    pinMode(PIN_PET_BUTTON, INPUT_PULLUP);
+    pinMode(PIN_MOOD_BUTTON, INPUT_PULLUP);
 }
 
 bool sensorWasPetted()
 {
-    bool pettedNow = digitalRead(PET_PIN) == LOW;
+    bool pettedNow = digitalRead(PIN_PET_BUTTON) == LOW;
     bool petted = pettedNow && !wasPetted;
     wasPetted = pettedNow;
 
@@ -30,7 +27,7 @@ bool sensorWasPetted()
 // todo weghalen for testing
 bool sensorMoodButtonPressed()
 {
-    bool buttonPressedNow = digitalRead(MOOD_PIN) == LOW;
+    bool buttonPressedNow = digitalRead(PIN_MOOD_BUTTON) == LOW;
     bool moodSwitched = buttonPressedNow && !moodWasSwitched;
     moodWasSwitched = buttonPressedNow;
 

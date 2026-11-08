@@ -2,7 +2,7 @@
 // Created by Mick on 6-11-2026.
 //
 
-#include "Mood.h"
+#include "mood/Mood.h"
 #include "../face/Face.h"
 #include "../hardware/Sensors.h"
 

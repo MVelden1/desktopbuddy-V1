@@ -20,7 +20,7 @@ static Mood currentMood = Mood::Neutral;
 static Expression currentExpression;
 static const bool LEFT_EYE = true;
 static const bool RIGHT_EYE = false;
-static EyeStyle eyeStyle = EyeStyle::Round;
+static EyeStyle eyeStyle = EyeStyle::Rounded;
 
 
 // --- blinking ---

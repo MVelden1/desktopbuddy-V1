@@ -21,6 +21,8 @@ static Expression currentExpression;
 static const bool LEFT_EYE = true;
 static const bool RIGHT_EYE = false;
 static EyeStyle eyeStyle = EyeStyle::Rounded;
+static const int FACE_WIDTH = 232;
+static const int FACE_HEIGHT = 140;
 
 
 // --- blinking ---
@@ -56,7 +58,10 @@ static void updateShape()
 
 void faceBegin(Arduino_GFX* gfx)
 {
-    face = new Arduino_Canvas(232, 140, gfx, 44, 40);
+    int x = (gfx->width() - FACE_WIDTH) / 2;
+    int y = (gfx->height() - FACE_HEIGHT) / 2;
+
+    face = new Arduino_Canvas(FACE_WIDTH, FACE_HEIGHT, gfx, x, y);
     face->begin(GFX_SKIP_OUTPUT_BEGIN);
 
     updateShape();
